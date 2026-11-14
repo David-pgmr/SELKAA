@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'unsafe-inline' https://cdnjs.cloudflare.com;style-src 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com;font-src https://fonts.gstatic.com;img-src data: https://cdnjs.cloudflare.com https://server.arcgisonline.com https://tile.openstreetmap.org;connect-src https://api.rss2json.com https://api.open-meteo.com;frame-src https://embed.waze.com https://www.waze.com;base-uri 'none';form-action 'none'">
+<meta name="theme-color" content="#070b14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SELKA">
+<title>SELKA v3.0</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -.5 20 20' shape-rendering='crispEdges'%3E%3Cpath fill='%23070b14' d='M4 0h3v1h-3zM8 0h4v1h-4zM13 0h3v1h-3zM3 1h14v1h-14zM2 2h16v1h-16zM1 3h18v1h-18zM1 4h18v1h-18zM1 5h18v1h-18zM1 6h18v1h-18zM1 7h18v1h-18zM1 8h18v1h-18zM1 9h18v1h-18zM1 10h18v1h-18zM1 11h18v1h-18zM1 12h18v1h-18zM1 13h18v1h-18zM1 14h18v1h-18zM1 15h18v1h-18zM2 16h16v1h-16zM5 17h10v1h-10zM7 18h6v1h-6z'/%3E%3Cpath fill='%235086F5' d='M4 1h3v1h-3zM8 1h4v1h-4zM13 1h3v1h-3zM3 2h14v1h-14zM2 3h16v1h-16zM2 4h16v1h-16zM2 5h16v1h-16zM2 7h16v1h-16zM2 8h16v1h-16zM2 9h2v1h-2zM5 9h1v1h-1zM8 9h4v1h-4zM14 9h1v1h-1zM16 9h2v1h-2zM2 10h2v1h-2zM6 10h2v1h-2zM12 10h2v1h-2zM16 10h2v1h-2zM2 11h2v1h-2zM5 11h10v1h-10zM16 11h2v1h-2zM2 12h2v1h-2zM5 12h1v1h-1zM7 12h6v1h-6zM14 12h1v1h-1zM16 12h2v1h-2zM2 13h2v1h-2zM5 13h2v1h-2zM9 13h2v1h-2zM13 13h2v1h-2zM16 13h2v1h-2zM2 14h2v1h-2zM5 14h10v1h-10zM16 14h2v1h-2zM2 15h2v1h-2zM5 15h10v1h-10zM16 15h2v1h-2zM5 16h10v1h-10zM7 17h6v1h-6z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{--bg:#070b14;--c:#00f0ff;--r:#ff2a55;--t:#dbe7f3;--m:#7d93a8;--p:rgba(10,20,36,.72);--l:rgba(0,240,255,.35)}
+*{box-sizing:border-box;margin:0}
+html,body{background:var(--bg);color:var(--t);font:13px/1.45 'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace}
+body{min-height:100vh;padding:calc(env(safe-area-inset-top) + 24px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + 10px);background:radial-gradient(circle at 15% 0,#0b1d33,transparent 55%),var(--bg)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;background:repeating-linear-gradient(0deg,rgba(0,240,255,.035) 0 1px,transparent 1px 3px)}
+body::before{content:"";position:fixed;left:0;right:0;height:140px;top:-140px;pointer-events:none;z-index:49;background:linear-gradient(transparent,rgba(0,240,255,.07),transparent);animation:sw 8s linear infinite}
+@keyframes sw{to{top:100%}}
+@keyframes bl{50%{opacity:.15}}
+@media(prefers-reduced-motion:reduce){body::before,h2 i{animation:none}}
+.cn{position:fixed;z-index:60;font-size:10px;color:var(--c);text-shadow:0 0 6px var(--c);pointer-events:none}
+#c1{top:calc(env(safe-area-inset-top) + 5px);left:10px}#c2{top:calc(env(safe-area-inset-top) + 5px);right:10px}
+#c3{bottom:calc(env(safe-area-inset-bottom) + 5px);left:10px}#c4{bottom:calc(env(safe-area-inset-bottom) + 5px);right:10px;color:var(--r);text-shadow:0 0 6px var(--r)}
+.grid{display:grid;gap:12px;max-width:1400px;margin:0 auto;grid-template-columns:repeat(12,1fr)}
+.pn{position:relative;min-width:0;background:var(--p);border:1px solid var(--l);padding:12px;backdrop-filter:blur(4px);box-shadow:inset 0 0 22px rgba(0,240,255,.07)}
+.pn::before,.pn::after{content:"";position:absolute;width:12px;height:12px;border:2px solid var(--c)}
+.pn::before{top:-1px;left:-1px;border-right:0;border-bottom:0}.pn::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+.hd{grid-column:1/-1;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+h1{font-size:clamp(14px,2.4vw,20px);letter-spacing:.06em;color:var(--c);text-shadow:0 0 10px rgba(0,240,255,.6)}h1 span{color:var(--r)}
+#wv{flex:1;min-width:180px;height:46px}
+.map{grid-column:span 8}.tel{grid-column:span 4}.shop{grid-column:span 5}.news{grid-column:span 7}
+h2{font-size:11px;letter-spacing:.16em;color:var(--c);margin-bottom:10px;display:flex;justify-content:space-between}
+h2 i{color:var(--r);font-style:normal;animation:bl 1.4s infinite}
+.shop,.news{align-self:start}
+details>summary{display:flex;align-items:center;min-height:40px;cursor:pointer;list-style:none;touch-action:manipulation}
+details>summary::-webkit-details-marker{display:none}
+details>summary:focus-visible{outline:2px solid var(--r);outline-offset:2px}
+details[open]>summary{margin-bottom:8px}
+summary h2{flex:1;margin:0;justify-content:flex-start;align-items:center}
+summary h2::before{content:"▸";display:inline-block;margin-right:8px;transition:transform .15s}
+details[open]>summary h2::before{transform:rotate(90deg)}
+summary h2 i{margin-left:auto}
+summary:hover h2{text-shadow:0 0 8px var(--c)}
+small{color:var(--m);font-size:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+.b{font:inherit;font-size:11px;letter-spacing:.06em;color:var(--c);background:rgba(0,240,255,.07);border:1px solid var(--l);padding:8px 12px;min-height:40px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;transition:.15s}
+.b:hover,.b.on{background:var(--c);color:var(--bg);box-shadow:0 0 12px var(--c)}
+.b.r{color:var(--r);border-color:rgba(255,42,85,.5);background:rgba(255,42,85,.07)}.b.r:hover{background:var(--r);color:#fff;box-shadow:0 0 12px var(--r)}
+a.b:not([href]){opacity:.35;pointer-events:none}
+.b:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--r);outline-offset:2px}
+input,textarea{font:inherit;color:var(--t);background:rgba(0,0,0,.4);border:1px solid var(--l);padding:9px;min-height:40px;width:100%}
+#map,#wz{height:clamp(320px,56vh,540px);border:1px solid var(--l);background:#000;margin-bottom:8px}
+#wz{display:none;width:100%}
+.leaflet-container{background:#050a12;font-family:inherit}
+.osm-dark{filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.6)}
+.leaflet-bar a{background:#0a1424;color:var(--c);border-color:var(--l)}
+.leaflet-control-attribution{background:rgba(7,11,20,.85)!important;color:var(--m)!important}.leaflet-control-attribution a{color:var(--c)!important}
+.cap{color:var(--m);font-size:10px;min-height:15px;margin-bottom:6px}
+#clk{font-size:32px;font-weight:700;color:var(--c);text-shadow:0 0 12px var(--c);line-height:1.1}
+#wt{font-size:24px;color:var(--r)}#wd{margin-left:8px}
+.st{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0 14px}
+.st div{border:1px solid rgba(0,240,255,.18);padding:6px 8px}.st small{display:block}.st b{font-size:15px}
+textarea{resize:vertical;min-height:120px;margin-bottom:8px}
+.tg{display:flex;gap:6px;align-items:center;border:1px solid rgba(0,240,255,.18);padding:4px 4px 4px 10px;margin-bottom:6px}
+.tg span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tg .b{min-height:34px;padding:4px 10px}
+#nl{max-height:440px;overflow-y:auto}
+.nw{display:block;border-left:2px solid var(--c);padding:6px 10px;margin-bottom:6px;color:var(--t);text-decoration:none;background:rgba(0,240,255,.03)}
+.nw:hover{border-color:var(--r);background:rgba(255,42,85,.07)}.nw em{color:var(--r);font-style:normal}
+@keyframes pu{50%{filter:drop-shadow(0 0 12px #5086F5) drop-shadow(0 0 3px #5086F5)}}
+.ush{background:none!important;border:0!important}
+.ush svg{display:block;filter:drop-shadow(0 0 4px #5086F5);animation:pu 1.9s ease-in-out infinite}
+.b{touch-action:manipulation}.b.sm{min-height:30px;padding:4px 10px;font-size:10px}
+@media(prefers-reduced-motion:reduce){.ush svg{animation:none}summary h2::before{transition:none}}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.grid>*{grid-column:auto!important}input,textarea{font-size:16px}#clk{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="cn" id="c1"></div><div class="cn" id="c2"></div><div class="cn" id="c3"></div><div class="cn" id="c4"></div>
+<main class="grid">
+<header class="pn hd">
+ <div><h1>SELKA <span>v3.0</span></h1><small>LAB DIY · MODO CAMPO · <span id="net"></span></small></div>
+ <canvas id="wv" aria-hidden="true"></canvas>
+</header>
+
+<section class="pn map">
+ <h2>MAPA TÁCTICO Y RADAR DE TRÁFICO <i>● LIVE</i></h2>
+ <div class="row">
+  <button class="b on" id="vm">MAPA TÁCTICO</button><button class="b" id="vw">TRÁFICO WAZE</button><button class="b r" id="gps">◎ MI GPS</button><button class="b sm" id="gpsu" title="Pedir de nuevo la ubicación al dispositivo">↻ ACTUALIZAR GPS</button>
+ </div>
+ <div id="map"></div>
+ <iframe id="wz" title="Waze Live Map" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+ <p class="cap" id="ms" aria-live="polite"></p>
+ <div class="row">
+  <input id="dest" value="Bogotá, Colombia" aria-label="Destino" style="flex:1;min-width:150px;width:auto">
+  <a class="b r" id="gm" target="_blank" rel="noopener noreferrer">RUTA EN GOOGLE MAPS ↗</a>
+ </div>
+</section>
+
+<section class="pn tel">
+ <h2>TELEMETRÍA LOCAL <i>●</i></h2>
+ <div id="clk">--:--:--</div><small id="dt"></small>
+ <div style="margin-top:10px"><b id="wt">--°C</b><span id="wd">SINCRONIZANDO…</span></div><small id="wl"></small>
+ <div class="st">
+  <div><small>SENSACIÓN</small><b id="wf">--</b></div><div><small>HUMEDAD</small><b id="wh">--</b></div>
+  <div><small>VIENTO</small><b id="ww">--</b></div><div><small>P. LLUVIA</small><b id="wr">--</b></div>
+  <div><small>MÁX HOY</small><b id="wmax">--</b></div><div><small>MÍN HOY</small><b id="wmin">--</b></div>
+ </div>
+ <h2>BITÁCORA</h2>
+ <textarea id="bt" placeholder="Registrar observaciones…" aria-label="Bitácora"></textarea>
+ <div class="row"><button class="b" id="stamp">+ SELLO DE TIEMPO</button><button class="b r" id="clr">BORRAR</button><small id="bs"></small></div>
+</section>
+
+<section class="pn shop">
+ <details>
+ <summary><h2>ESCÁNER DE COMPRAS SEGURAS <i>● ML + AMZ</i></h2></summary>
+ <div class="row"><button class="b on" id="m1">RELEVANCIA</button><button class="b" id="m2">MENOR PRECIO</button></div>
+ <div class="row">
+  <input id="q" placeholder="Producto a rastrear…" maxlength="60" aria-label="Producto" style="flex:1;min-width:150px;width:auto">
+  <button class="b" id="add">+ GUARDAR</button>
+ </div>
+ <div class="row"><a class="b" id="sml" target="_blank" rel="noopener noreferrer">MERCADO LIBRE ↗</a><a class="b" id="saz" target="_blank" rel="noopener noreferrer">AMAZON ↗</a></div>
+ <div class="row" id="sg"></div>
+ <h2 style="margin-top:12px">OBJETIVOS GUARDADOS</h2>
+ <div id="tgl"></div>
+ </details>
+</section>
+
+<section class="pn news">
+ <details>
+ <summary><h2>RADAR DE NOTICIAS VERIFICADAS <i>● RSS</i></h2></summary>
+ <div class="row" id="tp"></div>
+ <div id="nl"></div>
+ <div class="row" style="margin:8px 0 0"><button class="b" id="rf">↻ ACTUALIZAR</button><small id="ns"></small></div>
+ </details>
+</section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),
+h=(t,a={},...k)=>{const e=document.createElement(t);for(const x in a)x in e?e[x]=a[x]:e.setAttribute(x,a[x]);e.append(...k);return e},
+ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},
+sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}},
+msg=t=>$('#ms').textContent=t;
+let pos={lat:4.58,lon:-74.2167},src='DEFAULT',view='map',map,me,ring,wid;
+
+/* ---------- Coordenadas y enlace a Google Maps ---------- */
+function coords(){
+ $('#c1').textContent=`LAT ${Math.abs(pos.lat).toFixed(4)}° ${pos.lat<0?'S':'N'}`;
+ $('#c2').textContent=`LON ${Math.abs(pos.lon).toFixed(4)}° ${pos.lon<0?'W':'E'}`;
+ $('#c3').textContent='SRC '+src;
+ $('#wl').textContent='LOC '+(src=='DEFAULT'?'SOACHA / BOGOTÁ':'POSICIÓN GPS');
+ $('#gm').href=`https://www.google.com/maps/dir/?api=1&origin=${pos.lat},${pos.lon}&destination=${encodeURIComponent($('#dest').value||'Bogotá, Colombia')}&travelmode=driving`}
+$('#dest').oninput=coords;
+
+/* ---------- Módulo 1: mapa y tráfico ---------- */
+const ART=["....OOO.OOOO.OOO....", "...OCCCOCCCCOCCCO...", "..OCCCCCCCCCCCCCCO..", ".OCCCCCCCCCCCCCCCCO.", ".OCCCCCCCCCCCCCCCCO.", ".OCCCCCCCCCCCCCCCCO.", ".OOOOOOOOOOOOOOOOOO.", ".OCCCCCCCCCCCCCCCCO.", ".OCCCCCCCCCCCCCCCCO.", ".OCCOCOOCCCCOOCOCCO.", ".OCCOOCCOOOOCCOOCCO.", ".OCCOCCCCCCCCCCOCCO.", ".OCCOCOCCCCCCOCOCCO.", ".OCCOCCOOCCOOCCOCCO.", ".OCCOCCCCCCCCCCOCCO.", ".OCCOCCCCCCCCCCOCCO.", "..OOOCCCCCCCCCCOOO..", ".....OOCCCCCCOO.....", ".......OOOOOO......."];
+let userCoords=ld('saved_coords',null),busy=0;
+if(userCoords&&Math.abs(userCoords.lat)<=90&&Math.abs(userCoords.lng)<=180){pos={lat:userCoords.lat,lon:userCoords.lng};src='GPS (GUARDADO)'}else userCoords=null;
+try{
+ map=L.map('map').setView([pos.lat,pos.lon],userCoords?14:12);
+ map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener noreferrer">Leaflet</a>');
+ const EA='<a href="https://www.esri.com" target="_blank" rel="noopener noreferrer">Esri</a>, HERE, Garmin, © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>',
+ ES='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/',
+ base=L.tileLayer(ES+'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:16,attribution:'© '+EA}).addTo(map),
+ lbl=L.tileLayer(ES+'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',{maxZoom:16}).addTo(map);
+ /* Respaldo: si Esri no entrega ninguna tesela, cambia a OpenStreetMap oscurecido con CSS */
+ let tOk=0,tBad=0;
+ base.on('tileload',()=>tOk++).on('tileerror',()=>{
+  if(tOk||++tBad<4||!map.hasLayer(base))return;
+  map.removeLayer(base);map.removeLayer(lbl);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,className:'osm-dark',attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>'}).addTo(map);
+  msg('MAPA BASE ALTERNO: OPENSTREETMAP')});
+ ring=L.circle([pos.lat,pos.lon],{radius:3000,color:'#00f0ff',weight:1,dashArray:'4 6',fill:false}).addTo(map);
+ const px=ART.flatMap((r,y)=>[...r].map((c,x)=>c=='.'?'':`<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${c=='O'?'#070b14':'#5086F5'}"/>`)).join('');
+ me=L.marker([pos.lat,pos.lon],{icon:L.divIcon({className:'ush',html:`<svg viewBox="0 0 20 19" width="40" height="38" shape-rendering="crispEdges" aria-hidden="true">${px}</svg>`,iconSize:[40,38],iconAnchor:[20,19]}),zIndexOffset:1000,keyboard:false}).bindTooltip('POSICIÓN',{direction:'top',offset:[0,-18]}).addTo(map);
+}catch{$('#map').textContent='MAPA NO DISPONIBLE (SIN CONEXIÓN)'}
+
+function wz(){
+ const u=`https://embed.waze.com/iframe?zoom=13&lat=${pos.lat}&lon=${pos.lon}&ct=livemap&pin=1`,f=$('#wz');
+ if(f.getAttribute('src')!=u)f.src=u}
+function setView(v){
+ view=v;$('#map').style.display=v=='map'?'block':'none';$('#wz').style.display=v=='wz'?'block':'none';
+ $('#vm').classList.toggle('on',v=='map');$('#vw').classList.toggle('on',v=='wz');
+ if(v=='wz'){wz();msg('WAZE LIVE MAP: embotellamientos, accidentes, obras y policía en tiempo real.')}
+ else{msg('');map&&map.invalidateSize()}}
+$('#vm').onclick=()=>setView('map');$('#vw').onclick=()=>setView('wz');
+
+function askGps(){
+ if(busy)return;
+ if(!navigator.geolocation)return msg('GPS NO DISPONIBLE EN ESTE DISPOSITIVO');
+ busy=1;msg('BUSCANDO SEÑAL GPS…');
+ navigator.geolocation.getCurrentPosition(p=>{
+  busy=0;userCoords={lat:p.coords.latitude,lng:p.coords.longitude};sv('saved_coords',userCoords);
+  pos={lat:userCoords.lat,lon:userCoords.lng};src='GPS ±'+Math.round(p.coords.accuracy)+'m';
+  if(map){me.setLatLng(userCoords);ring.setLatLng(userCoords);view=='map'?map.flyTo(userCoords,15):map.setView(userCoords,15,{animate:false})}
+  coords();weather();if(view=='wz')wz();msg('GPS ACTUALIZADO · COORDENADAS GUARDADAS')},
+ e=>{busy=0;msg('ERROR GPS: '+e.message+' (revisa los permisos del navegador)')},
+ {enableHighAccuracy:true,timeout:10000,maximumAge:0})}
+$('#gps').onclick=()=>{
+ if(!userCoords)return askGps();
+ if(map)view=='map'?map.flyTo(userCoords,15):map.setView(userCoords,15,{animate:false});
+ msg('CENTRADO EN TU ÚLTIMA UBICACIÓN · DOBLE CLIC O ↻ PARA ACTUALIZAR')};
+$('#gps').ondblclick=askGps;$('#gpsu').onclick=askGps;
+
+/* ---------- Módulo 2: compras (Mercado Libre CO + Amazon) ---------- */
+let T=ld('ev_t',[]),mode='rel';
+const sl=q=>q.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''),
+ML=q=>`https://listado.mercadolibre.com.co/${sl(q)}${mode=='pre'?'_OrderId_PRICE_NoIndex_True':'_NoIndex_True'}`,
+AZ=q=>`https://www.amazon.com/s?k=${encodeURIComponent(q)}${mode=='pre'?'&s=price-asc-rank':'&s=relevanceblender'}`,
+lk=(t,u)=>h('a',{className:'b',href:u,target:'_blank',rel:'noopener noreferrer'},t);
+function live(){const q=$('#q').value.trim();
+ [['#sml',ML],['#saz',AZ]].forEach(([s,f])=>{const e=$(s);sl(q)?e.href=f(q):e.removeAttribute('href')})}
+function drawT(){
+ $('#tgl').replaceChildren(...(T.length?T.map((q,i)=>h('div',{className:'tg'},h('span',{title:q},q),lk('ML',ML(q)),lk('AMZ',AZ(q)),
+  h('button',{className:'b r',title:'Eliminar objetivo',onclick:()=>{T.splice(i,1);sv('ev_t',T);drawT()}},'×'))):[h('small',{},'SIN OBJETIVOS · AÑADE UNO ARRIBA')]))}
+function addT(v){
+ const q=(v??$('#q').value).trim().slice(0,60);if(!sl(q))return;
+ if(!T.some(x=>x.toLowerCase()==q.toLowerCase())){T.unshift(q);T=T.slice(0,30);sv('ev_t',T)}
+ $('#q').value='';live();drawT()}
+$('#add').onclick=()=>addT();$('#q').oninput=live;$('#q').onkeydown=e=>e.key=='Enter'&&addT();
+[['m1','rel'],['m2','pre']].forEach(([id,m])=>$('#'+id).onclick=()=>{mode=m;$('#m1').classList.toggle('on',m=='rel');$('#m2').classList.toggle('on',m=='pre');live();drawT()});
+$('#sg').append(h('small',{},'RÁPIDO:'),...['audífonos','componentes PC','libros','ropa'].map(s=>h('button',{className:'b',onclick:()=>addT(s)},s)));
+
+/* ---------- Módulo 3: noticias (RSS vía rss2json) ---------- */
+const FEEDS=[['BBC MUNDO','https://feeds.bbci.co.uk/mundo/rss.xml'],['XATAKA','https://www.xataka.com/feedburner.xml'],['THE VERGE','https://www.theverge.com/rss/index.xml']],
+TOPICS=[['TODO',/./],
+['TECNOLOGÍA',/tecnolog|tech|inteligencia artificial|\bia\b|\bai\b|apple|google|android|iphone|chip|software|robot|microsoft|samsung|internet|ciber|cyber|nvidia|openai/i],
+['CIENCIA',/cienc|scien|nasa|espaci|space|astro|planeta|investigaci|research|biolog|f[ií]sic|climat|cient[ií]f|vacuna|energ/i],
+['VIDEOJUEGOS',/videojueg|juego|game|gaming|playstation|xbox|nintendo|steam|\bps5\b|switch|esports|gta|zelda|mario/i],
+['CINE',/cine|pel[ií]cula|film|movie|serie|netflix|hbo|disney|marvel|spider|star wars|oscar|tr[aá]iler|trailer|director|streaming|actor|actriz/i]],
+ago=d=>{const m=(Date.now()-d)/6e4;return isNaN(m)?'':m<60?`hace ${~~m} min`:m<1440?`hace ${~~(m/60)} h`:`hace ${~~(m/1440)} d`};
+let items=[],topic=0,ok=0;
+function drawNews(){
+ const l=items.filter(i=>TOPICS[topic][1].test(i.x)).slice(0,14);
+ $('#nl').replaceChildren(...(l.length?l.map(i=>h('a',{className:'nw',href:i.l,target:'_blank',rel:'noopener noreferrer'},h('small',{},h('em',{},i.n),' · '+ago(i.d)),i.t)):[h('small',{},'SIN SEÑAL O SIN RESULTADOS PARA ESTE FILTRO')]));
+ $('#ns').textContent=`FUENTES ACTIVAS ${ok}/${FEEDS.length}`;
+ [...$('#tp').children].forEach((b,i)=>b.classList.toggle('on',i==topic))}
+$('#tp').append(...TOPICS.map(([t],i)=>h('button',{className:'b',onclick:()=>{topic=i;drawNews()}},t)));
+async function news(){
+ $('#ns').textContent='SINCRONIZANDO…';
+ const rs=await Promise.allSettled(FEEDS.map(async([n,u])=>{
+  const d=await(await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(u))).json();
+  if(d.status!='ok')throw 0;
+  return d.items.filter(i=>/^https:\/\//.test(i.link)).map(i=>({n,t:i.title,l:i.link,d:new Date((i.pubDate||'').replace(' ','T')+'Z'),x:i.title+' '+(i.categories||[]).join(' ')+' '+(i.description||'').slice(0,300)}))}));
+ ok=rs.filter(r=>r.status=='fulfilled').length;
+ items=rs.flatMap(r=>r.value||[]).sort((a,b)=>(b.d||0)-(a.d||0));drawNews()}
+$('#rf').onclick=news;
+
+/* ---------- Módulo 4: clima, reloj, bitácora ---------- */
+const wx=c=>c==0?'DESPEJADO':c<4?'NUBOSIDAD VARIABLE':c<49?'NIEBLA':c<58?'LLOVIZNA':c<68?'LLUVIA':c<78?'NIEVE':c<83?'CHUBASCOS':c<87?'NIEVE':c>94?'TORMENTA':'LLUVIA';
+async function weather(){
+ try{
+  const d=await(await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.lat.toFixed(3)}&longitude=${pos.lon.toFixed(3)}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=1`)).json(),
+  c=d.current,y=d.daily,s=(i,v)=>$('#'+i).textContent=v;
+  s('wt',Math.round(c.temperature_2m)+'°C');s('wd',wx(c.weather_code));s('wf',Math.round(c.apparent_temperature)+'°C');
+  s('wh',c.relative_humidity_2m+'%');s('ww',Math.round(c.wind_speed_10m)+' km/h');s('wr',(y.precipitation_probability_max[0]??'--')+'%');
+  s('wmax',Math.round(y.temperature_2m_max[0])+'°C');s('wmin',Math.round(y.temperature_2m_min[0])+'°C')
+ }catch{$('#wd').textContent='SIN DATOS DE CLIMA'}}
+function tick(){
+ const n=new Date(),o={timeZone:'America/Bogota'};
+ $('#clk').textContent=n.toLocaleTimeString('es-CO',{...o,hour12:false});
+ $('#dt').textContent=n.toLocaleDateString('es-CO',{...o,weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase();
+ $('#c4').textContent='UTC '+n.toISOString().slice(11,19)}
+const bt=$('#bt');bt.value=ld('ev_log','');
+bt.oninput=()=>{sv('ev_log',bt.value);$('#bs').textContent='GUARDADO '+new Date().toLocaleTimeString('es-CO')};
+$('#stamp').onclick=()=>{bt.value+=(bt.value&&!bt.value.endsWith('\n')?'\n':'')+'['+new Date().toLocaleString('es-CO',{timeZone:'America/Bogota'})+'] ';bt.focus();bt.oninput()};
+$('#clr').onclick=()=>{if(confirm('¿Borrar toda la bitácora?')){bt.value='';bt.oninput()}};
+
+/* ---------- Cabecera: onda de frecuencia ---------- */
+const cv=$('#wv'),cx=cv.getContext('2d');let W,H,tt=0;
+const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function rs(){const d=devicePixelRatio||1;W=cv.clientWidth;H=cv.clientHeight;cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0)}
+function dw(){
+ cx.clearRect(0,0,W,H);cx.strokeStyle='rgba(0,240,255,.15)';cx.beginPath();cx.moveTo(0,H/2);cx.lineTo(W,H/2);cx.stroke();
+ [['#00f0ff',.38,.045,2.2,1.6],['rgba(0,240,255,.4)',.24,.11,3.1,1],['#ff2a55',.14,.2,5,1]].forEach(([c,a,f,s,w])=>{
+  cx.beginPath();cx.strokeStyle=c;cx.lineWidth=w;
+  for(let x=0;x<=W;x+=2){const y=H/2+Math.sin(x*f+tt*s)*H*a*(.6+.4*Math.sin(x*.01-tt));x?cx.lineTo(x,y):cx.moveTo(x,y)}
+  cx.stroke()});
+ tt+=.03;if(!still)requestAnimationFrame(dw)}
+addEventListener('resize',()=>{rs();still&&dw()});
+
+const net=()=>$('#net').textContent=navigator.onLine?'● ONLINE':'● OFFLINE';
+addEventListener('online',net);addEventListener('offline',net);
+
+/* ---------- Arranque ---------- */
+net();coords();setView('map');live();drawT();rs();dw();tick();setInterval(tick,1000);
+weather();setInterval(weather,6e5);news();drawNews();
+</script>
+</body>
+</html>
